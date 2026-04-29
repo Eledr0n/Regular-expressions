@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="06878bf2-d4d8-4dae-aff5-89297c3c6715" name="Changes" comment="Fourth commit">
+    <list default="true" id="06878bf2-d4d8-4dae-aff5-89297c3c6715" name="Changes" comment="Fifth commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/phonebook.csv" beforeDir="false" afterPath="$PROJECT_DIR$/phonebook.csv" afterDir="false" />
@@ -126,15 +126,42 @@
       <option name="project" value="LOCAL" />
       <updated>1778142150116</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Fourth commit">
+      <option name="closed" value="true" />
+      <created>1778673161933</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1778673161933</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Fifth commit">
+      <option name="closed" value="true" />
+      <created>1778673230273</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1778673230273</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Second commit" />
-    <MESSAGE value="Fifth commit" />
     <MESSAGE value="Third commit" />
     <MESSAGE value="Fourth commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fourth commit" />
+    <MESSAGE value="Fifth commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fifth commit" />
   </component>
 </project>

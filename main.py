@@ -3,110 +3,137 @@ import csv
 import re
 
 
-# ---------- ФУНКЦИЯ НОРМАЛИЗАЦИИ ТЕЛЕФОНА ----------
+# =========================================================
+# ФУНКЦИЯ НОРМАЛИЗАЦИИ ТЕЛЕФОНА
+# =========================================================
 def format_phone(phone):
 
-    pattern = re.compile(
-        r"(\+7|8)\s*\(?(\d{3})\)?[\s-]*"
-        r"(\d{3})[\s-]*(\d{2})[\s-]*(\d{2})"
+    phone_pattern = re.compile(
+        r"(\+7|8)\s*"
+        r"\(?(\d{3})\)?[\s-]*"
+        r"(\d{3})[\s-]*"
+        r"(\d{2})[\s-]*"
+        r"(\d{2})"
         r"(?:\s*\(?(доб.)\s*(\d+)\)?)?"
     )
 
-    result = pattern.search(phone)
+    result = phone_pattern.search(phone)
 
+    # если телефон не подошёл под шаблон
     if not result:
         return phone
 
-    formatted = (
+    formatted_phone = (
         f"+7({result.group(2)})"
-        f"{result.group(3)}-{result.group(4)}-{result.group(5)}"
+        f"{result.group(3)}-"
+        f"{result.group(4)}-"
+        f"{result.group(5)}"
     )
 
     # добавочный номер
     if result.group(7):
-        formatted += f" доб.{result.group(7)}"
+        formatted_phone += f" доб.{result.group(7)}"
 
-    return formatted
+    return formatted_phone
 
 
-# ---------- ЧТЕНИЕ CSV ----------
+# =========================================================
+# ЧТЕНИЕ CSV
+# =========================================================
 with open("phonebook_raw.csv", encoding="utf-8-sig") as f:
-    rows = csv.reader(f)
-    contacts_list = list(rows)
 
-# заголовок
+    reader = csv.reader(f)
+
+    contacts_list = list(reader)
+
+
+# =========================================================
+# ЗАГОЛОВОК И ДАННЫЕ
+# =========================================================
 header = contacts_list[0]
 
-# данные
-contacts = contacts_list[1:]
-
-processed = []
+raw_contacts = contacts_list[1:]
 
 
-# ---------- ОБРАБОТКА КОНТАКТОВ ----------
-for contact in contacts:
+# =========================================================
+# НОРМАЛИЗАЦИЯ КОНТАКТОВ
+# =========================================================
+normalized_contacts = []
 
-    # гарантируем 7 полей
+for contact in raw_contacts:
+
+    # гарантируем ровно 7 полей
     contact += [''] * (7 - len(contact))
     contact = contact[:7]
 
-    # ---------- НОРМАЛИЗАЦИЯ ФИО ----------
+    # -----------------------------------------------------
+    # НОРМАЛИЗАЦИЯ ФИО
+    # -----------------------------------------------------
     fio = " ".join(contact[:3]).split()
 
-    lastname = fio[0] if len(fio) > 0 else ""
-    firstname = fio[1] if len(fio) > 1 else ""
-    surname = fio[2] if len(fio) > 2 else ""
+    lastname = ""
+    firstname = ""
+    surname = ""
+
+    if len(fio) > 0:
+        lastname = fio[0]
+
+    if len(fio) > 1:
+        firstname = fio[1]
+
+    if len(fio) > 2:
+        surname = fio[2]
 
     contact[0] = lastname
     contact[1] = firstname
     contact[2] = surname
 
-    # ---------- НОРМАЛИЗАЦИЯ ТЕЛЕФОНА ----------
+    # -----------------------------------------------------
+    # НОРМАЛИЗАЦИЯ ТЕЛЕФОНА
+    # -----------------------------------------------------
     contact[5] = format_phone(contact[5])
 
-    processed.append(contact)
+    normalized_contacts.append(contact)
 
 
-# ---------- ОБЪЕДИНЕНИЕ ДУБЛЕЙ ----------
-merged = {}
+# =========================================================
+# ОБЪЕДИНЕНИЕ ДУБЛЕЙ
+# =========================================================
+merged_contacts = {}
 
-for contact in processed:
+for contact in normalized_contacts:
 
     # ключ = фамилия + имя
     key = (contact[0], contact[1])
 
-    if key not in merged:
+    # если контакт новый
+    if key not in merged_contacts:
 
-        merged[key] = contact
+        merged_contacts[key] = contact
 
+    # если дубль найден
     else:
 
-        existing = merged[key]
+        existing_contact = merged_contacts[key]
 
-        # заполняем только пустые поля
+        # объединяем поля
         for i in range(7):
 
-            if existing[i] == "" and contact[i] != "":
-                existing[i] = contact[i]
+            # если поле пустое — заполняем
+            if existing_contact[i] == "" and contact[i] != "":
+
+                existing_contact[i] = contact[i]
 
 
-# ---------- ФИНАЛЬНЫЙ СПИСОК ----------
-final_contacts = [header] + list(merged.values())
+# =========================================================
+# ФИНАЛЬНЫЙ СПИСОК
+# =========================================================
+final_contacts = [header] + list(merged_contacts.values())
 
 
-# ---------- ПРОВЕРКА ----------
-print("Исходных контактов:", len(contacts))
-print("После объединения:", len(final_contacts) - 1)
-
-print("\nКлючи объединения:")
-for key in merged.keys():
-    print(key)
-
-print("\nИтоговые данные:")
-pprint(final_contacts)
-
-
-# ---------- СОХРАНЕНИЕ CSV ----------
+# =========================================================
+# СОХРАНЕНИЕ CSV
+# =========================================================
 with open(
     "phonebook.csv",
     "w",
@@ -114,8 +141,9 @@ with open(
     newline=""
 ) as f:
 
-    datawriter = csv.writer(f, delimiter=',')
+    writer = csv.writer(f, delimiter=",")
 
-    datawriter.writerows(final_contacts)
+    writer.writerows(final_contacts)
 
-print("\nФайл phonebook.csv успешно сохранён.")
+
+print("\nФайл phonebook.csv успешно создан.")
