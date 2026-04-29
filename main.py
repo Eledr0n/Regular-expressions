@@ -1,11 +1,8 @@
-from pprint import pprint
 import csv
 import re
 
 
-# =========================================================
-# ФУНКЦИЯ НОРМАЛИЗАЦИИ ТЕЛЕФОНА
-# =========================================================
+
 def format_phone(phone):
 
     phone_pattern = re.compile(
@@ -37,9 +34,6 @@ def format_phone(phone):
     return formatted_phone
 
 
-# =========================================================
-# ЧТЕНИЕ CSV
-# =========================================================
 with open("phonebook_raw.csv", encoding="utf-8-sig") as f:
 
     reader = csv.reader(f)
@@ -47,17 +41,13 @@ with open("phonebook_raw.csv", encoding="utf-8-sig") as f:
     contacts_list = list(reader)
 
 
-# =========================================================
-# ЗАГОЛОВОК И ДАННЫЕ
-# =========================================================
+
 header = contacts_list[0]
 
 raw_contacts = contacts_list[1:]
 
 
-# =========================================================
-# НОРМАЛИЗАЦИЯ КОНТАКТОВ
-# =========================================================
+
 normalized_contacts = []
 
 for contact in raw_contacts:
@@ -66,9 +56,6 @@ for contact in raw_contacts:
     contact += [''] * (7 - len(contact))
     contact = contact[:7]
 
-    # -----------------------------------------------------
-    # НОРМАЛИЗАЦИЯ ФИО
-    # -----------------------------------------------------
     fio = " ".join(contact[:3]).split()
 
     lastname = ""
@@ -88,17 +75,11 @@ for contact in raw_contacts:
     contact[1] = firstname
     contact[2] = surname
 
-    # -----------------------------------------------------
-    # НОРМАЛИЗАЦИЯ ТЕЛЕФОНА
-    # -----------------------------------------------------
     contact[5] = format_phone(contact[5])
 
     normalized_contacts.append(contact)
 
 
-# =========================================================
-# ОБЪЕДИНЕНИЕ ДУБЛЕЙ
-# =========================================================
 merged_contacts = {}
 
 for contact in normalized_contacts:
@@ -125,15 +106,9 @@ for contact in normalized_contacts:
                 existing_contact[i] = contact[i]
 
 
-# =========================================================
-# ФИНАЛЬНЫЙ СПИСОК
-# =========================================================
 final_contacts = [header] + list(merged_contacts.values())
 
 
-# =========================================================
-# СОХРАНЕНИЕ CSV
-# =========================================================
 with open(
     "phonebook.csv",
     "w",
